@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Espace étudiant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_acc.css') }}" />
+  </head>
+  <body>
+    <section id="section_std">
+      <div id="nav_b">
+        <nav id="nav_bar">
+          <div id="nav">
+            <a href="{{ url_for('home') }}" aria-label="Accueil"><img src="{{ url_for('static', filename='img/images (3).png') }}" alt="Accueil" class="scroll" height="25" /></a>
+            <a href="{{ url_for('deconnexion') }}" aria-label="Déconnexion"><img src="{{ url_for('static', filename='img/images (8).png') }}" alt="Déconnexion" width="27" /></a>
+          </div>
+          <input type="checkbox" name="mode" id="mode" aria-label="Mode sombre" />
+        </nav>
+      </div>
+
+      <figure id="fcours">
+        <h1>Espace Étudiant {{ current_user.nom }}</h1>
+        <div id="lk">
+          <p><a href="{{ url_for('home') }}" class="link">Accueil</a></p>
+          <p><a href="{{ url_for('deconnexion') }}" class="link">Déconnexion</a></p>
+        </div>
+        <form method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+          <input type="hidden" name="action" value="reset" />
+          <button type="submit" class="btn_sub">Recommencer</button>
+        </form>
+
+        {% if not faculte %}
+          <form method="post" class="quiz">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <input type="hidden" name="action" value="set_faculte" />
+            <select name="faculte_id" required>
+              <option value="">-- Faculté --</option>
+              {% for f in facultes %}<option value="{{ f.id }}">{{ f.nom }}</option>{% endfor %}
+            </select>
+            <button type="submit" class="btn_sub">Continuer</button>
+          </form>
+        {% else %}
+          <div class="selection_etape">
+            <p><strong>Faculté :</strong> <b class="h2">{{ faculte.nom }}</b></p>
+            <form method="post">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+              <input type="hidden" name="action" value="back_faculte" />
+              <button type="submit" class="btn_rc">Changer</button>
+            </form>
+          </div>
+
+          {% if not departement %}
+            <form method="post" class="quiz">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+              <input type="hidden" name="action" value="set_departement" />
+              <select name="departement_id" required>
+                <option value="">-- Département --</option>
+                {% for d in departements %}<option value="{{ d.id }}">{{ d.nom }}</option>{% endfor %}
+              </select>
+              <button type="submit" class="btn_sub">Continuer</button>
+            </form>
+          {% else %}
+            <div class="selection_etape">
+              <p><strong>Département :</strong> <b class="h2">{{ departement.nom }}</b></p>
+              <form method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                <input type="hidden" name="action" value="back_departement" />
+                <button type="submit" class="btn_rc">Changer</button>
+              </form>
+            </div>
+
+            {% if not promotion %}
+              <form method="post" class="quiz">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                <input type="hidden" name="action" value="set_promotion" />
+                <select name="promotion_id" required>
+                  <option value="">-- Promotion --</option>
+                  {% for p in promotions %}<option value="{{ p.id }}">{{ p.nom }}</option>{% endfor %}
+                </select>
+                <button type="submit" class="btn_sub">Continuer</button>
+              </form>
+            {% else %}
+              <div class="selection_etape">
+                <p><strong>Promotion :</strong> <b class="h2">{{ promotion.nom }}</b></p>
+                <form method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                  <input type="hidden" name="action" value="back_promotion" />
+                  <button type="submit" class="btn_rc">Changer</button>
+                </form>
+              </div>
+
+              {% if not semestre %}
+                <form method="post" class="quiz">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                  <input type="hidden" name="action" value="set_semestre" />
+                  <select name="semestre_id" required>
+                    <option value="">-- Semestre --</option>
+                    {% for s in semestres %}<option value="{{ s.id }}">{{ s.nom }}</option>{% endfor %}
+                  </select>
+                  <button type="submit" class="btn_sub">Voir les cours</button>
+                </form>
+              {% else %}
+                <div class="selection_etape">
+                  <p><strong>Semestre :</strong> <b class="h2">{{ semestre.nom }}</b></p>
+                  <form method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                    <input type="hidden" name="action" value="back_semestre" />
+                    <button type="submit" class="btn_rc">Changer</button>
+                  </form>
+                </div>
+
+                <div id="cours_f">
+                  <h2 class="h2">Cours disponibles</h2>
+                  <ul id="c_c">
+                    {% for c in cours %}
+                      <li class="cours_etudiant_item">
+                        <div class="cours_contexte">
+                          <strong>Faculté :</strong> {{ c.semestre.promotion.departement.faculte.nom }}
+                          <strong>Département :</strong> {{ c.semestre.promotion.departement.nom }}
+                          <strong>Promotion :</strong> {{ c.semestre.promotion.nom }}
+                          <strong>Semestre :</strong> {{ c.semestre.nom }}
+                        </div>
+                        <a class="li_cours" href="{{ url_for('voir_supports', cours_id=c.id) }}">{{ c.nom }}</a>
+                      </li>
+                    {% else %}
+                      <li class="small_info">Aucun cours disponible pour cette sélection.</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      </figure>
+    </section>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

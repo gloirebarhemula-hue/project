@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_acc.css') }}" />
+  </head>
+  <body>
+    <main>
+      <div id="nav_b">
+        <nav id="nav_bar">
+          <div id="nav">
+            <a href="{{ url_for('index') }}" aria-label="Accueil">
+              <img src="{{ url_for('static', filename='img/images (3).png') }}" alt="Accueil" height="25" class="scroll" />
+            </a>
+            <a href="{{ url_for('index') }}" aria-label="Retour">
+              <img src="{{ url_for('static', filename='img/images (8).png') }}" alt="Retour" width="27" />
+            </a>
+          </div>
+          <input type="checkbox" name="mode" id="mode" aria-label="Mode sombre" />
+        </nav>
+      </div>
+      <section class="bull">
+        <div class="form" id="hey">
+          <h2>Bonjour</h2>
+        </div>
+        <div class="form">
+          <h1 class="h1">Connexion</h1>
+          <form action="{{ url_for('connexion') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <div class="champ">
+              <label for="email">Email :</label>
+              <input class="input" id="email" type="email" name="email" placeholder="Email" required />
+            </div>
+            <div class="champ">
+              <label for="password">Mot de passe :</label>
+              <input class="input" type="password" name="mot_de_passe" id="password" placeholder="Mot de passe" required />
+              <input type="checkbox" id="chek" aria-label="Afficher le mot de passe" onclick="voir_password()" />
+            </div>
+            <button type="submit" class="btn_sub"><b>Se connecter</b></button>
+          </form>
+          <p>
+            Pas encore inscrit ? <a href="{{ url_for('inscription') }}" class="link">Créer un compte</a>
+          </p>
+        </div>
+      </section>
+    </main>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

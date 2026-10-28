@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_acc.css') }}" />
+{% endblock %}
+{% block main %}
+<section class="error_page">
+  <h1 class="h1">Erreur {{ code }}</h1>
+  <p>{{ message }}</p>
+  <a href="{{ url_for('index') }}" class="btn_link">Retour à l'accueil</a>
+</section>
+{% endblock %}

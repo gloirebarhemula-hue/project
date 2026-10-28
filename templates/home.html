@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accueil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_acc.css') }}" />
+  </head>
+  <body>
+    <section>
+      <div id="nav_b">
+        <nav id="nav_bar">
+          <div id="nav">
+            <a href="{{ url_for('home') }}" aria-label="Accueil">
+              <img src="{{ url_for('static', filename='img/images (3).png') }}" alt="Accueil" height="25" />
+            </a>
+            <a href="{{ url_for('deconnexion') }}" aria-label="Déconnexion">
+              <img src="{{ url_for('static', filename='img/images (8).png') }}" alt="Déconnexion" width="27" />
+            </a>
+          </div>
+          <input type="checkbox" name="mode" id="mode" aria-label="Mode sombre" />
+        </nav>
+      </div>
+      <figure id="section_home">
+        <h1 class="h1">Bonjour <b class="nom">{{ current_user.nom }} !</b></h1>
+        <div id="p">
+          <p>
+            Bienvenue dans le système de gestion et de diffusion des supports de cours universitaires.
+            Les contenus sont classés par faculté, département, promotion et semestre afin de faciliter
+            leur consultation depuis un téléphone ou un ordinateur.
+          </p>
+        </div>
+        {% if current_user.role == "professeur" %}
+          <a href="{{ url_for('professeur') }}" class="welcome">Accéder à l’espace professeur</a>
+        {% else %}
+          <a href="{{ url_for('student') }}" class="welcome">Accéder à l’espace étudiant</a>
+        {% endif %}
+      </figure>
+    </section>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

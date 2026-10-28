@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Système de gestion et de diffusion des supports de cours universitaires." />
+    <title>{% block title %}Gestion des supports de cours{% endblock %}</title>
+    {% block style %}{% endblock %}
+  </head>
+  <body>
+    <main>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash_list" aria-live="polite">
+            {% for category, message in messages %}
+              <div class="flash_message {{ category }}" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="flash_close" aria-label="Fermer">×</button>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      {% block main %}{% endblock %}
+    </main>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

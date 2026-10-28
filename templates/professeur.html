@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Espace professeur</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_acc.css') }}" />
+  </head>
+  <body>
+    <section id="section_std">
+      <div id="nav_b">
+        <nav id="nav_bar">
+          <div id="nav">
+            <a href="{{ url_for('home') }}" aria-label="Accueil"><img src="{{ url_for('static', filename='img/images (3).png') }}" alt="Accueil" class="scroll" height="25" /></a>
+            <a href="{{ url_for('deconnexion') }}" aria-label="Déconnexion"><img src="{{ url_for('static', filename='img/images (8).png') }}" alt="Déconnexion" width="27" /></a>
+          </div>
+          <input type="checkbox" name="mode" id="mode" aria-label="Mode sombre" />
+        </nav>
+      </div>
+
+      <figure id="fcours">
+        <h1 class="h1">Espace professeur</h1>
+        <p><a class="link" href="{{ url_for('deconnexion') }}">Déconnexion</a></p>
+
+        <h3 class="h2">Ajouter une faculté</h3>
+        <form method="post" class="quiz">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+          <input type="hidden" name="action" value="add_faculte" />
+          <input type="text" name="nom" class="input" maxlength="100" placeholder="Nom de la faculté" required />
+          <button type="submit" class="btn_rc">Ajouter</button>
+        </form>
+
+        <h3 class="h2">Ajouter un département</h3>
+        <form method="post" class="quiz">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+          <input type="hidden" name="action" value="add_departement" />
+          <input type="text" name="nom" class="input" maxlength="100" placeholder="Nom du département" required />
+          <select name="faculte_id" required>
+            <option value="">-- Faculté --</option>
+            {% for f in facultes %}<option value="{{ f.id }}">{{ f.nom }}</option>{% endfor %}
+          </select>
+          <button type="submit" class="btn_rc">Ajouter</button>
+        </form>
+
+        <h3 class="h2">Ajouter une promotion</h3>
+        <form method="post" class="quiz">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+          <input type="hidden" name="action" value="add_promotion" />
+          <input type="text" name="nom" class="input" maxlength="100" placeholder="Nom de la promotion" required />
+          <select name="departement_id" required>
+            <option value="">-- Département --</option>
+            {% for d in departements %}<option value="{{ d.id }}">{{ d.nom }} — {{ d.faculte.nom }}</option>{% endfor %}
+          </select>
+          <button type="submit" class="btn_rc">Ajouter</button>
+        </form>
+
+        <h3 class="h2">Ajouter un semestre</h3>
+        <form method="post" class="quiz">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+          <input type="hidden" name="action" value="add_semestre" />
+          <select name="nom" required>
+            <option value="">-- Semestre --</option>
+            <option value="Premier">Premier</option>
+            <option value="Second">Second</option>
+          </select>
+          <select name="promotion_id" required>
+            <option value="">-- Promotion --</option>
+            {% for p in promotions %}<option value="{{ p.id }}">{{ p.nom }} — {{ p.departement.nom }}</option>{% endfor %}
+          </select>
+          <button type="submit" class="btn_rc">Ajouter</button>
+        </form>
+
+        <h3 class="h2">Ajouter un cours</h3>
+        <p class="small_info">Classez obligatoirement le cours dans cet ordre : <strong>faculté → département → promotion → semestre</strong>, puis saisissez son nom et son support.</p>
+        <form method="post" class="quiz" enctype="multipart/form-data" id="form_cours">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+          <input type="hidden" name="action" value="add_cours" />
+
+          <select name="faculte_id" id="cours_faculte" required>
+            <option value="">-- Faculté --</option>
+            {% for f in facultes %}<option value="{{ f.id }}">{{ f.nom }}</option>{% endfor %}
+          </select>
+          <select name="departement_id" id="cours_departement" required disabled>
+            <option value="">-- Département --</option>
+            {% for d in departements %}<option value="{{ d.id }}" data-faculte="{{ d.faculte_id }}">{{ d.nom }}</option>{% endfor %}
+          </select>
+          <select name="promotion_id" id="cours_promotion" required disabled>
+            <option value="">-- Promotion --</option>
+            {% for p in promotions %}<option value="{{ p.id }}" data-departement="{{ p.departement_id }}">{{ p.nom }}</option>{% endfor %}
+          </select>
+          <select name="semestre_id" id="cours_semestre" required disabled>
+            <option value="">-- Semestre --</option>
+            {% for s in semestres %}<option value="{{ s.id }}" data-promotion="{{ s.promotion_id }}">{{ s.nom }}</option>{% endfor %}
+          </select>
+          <input type="text" name="nom" class="input" maxlength="150" placeholder="Nom du cours" required />
+          <input type="file" name="fichier" class="input" accept=".pdf,.mp4,.webm,.ogg,.doc,.docx,.ppt,.pptx,.xls,.xlsx" />
+          <button type="submit" class="btn_rc" id="btn_ajouter_cours" disabled>Ajouter le cours</button>
+        </form>
+
+        <h3 class="h3">Cours enregistrés</h3>
+        <ul id="cours_f">
+          {% for c in cours %}
+            <li class="cours_professeur_item">
+              <div class="cours_contexte">
+                <strong>Faculté :</strong> {{ c.semestre.promotion.departement.faculte.nom }}
+                <strong>Département :</strong> {{ c.semestre.promotion.departement.nom }}
+                <strong>Promotion :</strong> {{ c.semestre.promotion.nom }}
+                <strong>Semestre :</strong> {{ c.semestre.nom }}
+              </div>
+              <form method="post" class="dd form-supprimer-cours" data-course-name="{{ c.nom }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                <input type="hidden" name="action" value="delete_cours" />
+                <input type="hidden" name="cours_id" value="{{ c.id }}" />
+                <strong>{{ c.nom }}</strong>
+                {% if c.fichier %}<small>{{ c.fichier }}</small>{% endif %}
+                <button type="submit" class="btn_sub">Supprimer</button>
+              </form>
+            </li>
+          {% else %}
+            <li class="small_info">Aucun cours enregistré pour le moment.</li>
+          {% endfor %}
+        </ul>
+      </figure>
+    </section>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

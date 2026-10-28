@@ -1,0 +1,61 @@
+{% extends 'base.html' %} {% block style %}
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='css/style_acc.css')}}"
+/>
+{% endblock %} {%block main%}
+<div id="nav_b">
+  <nav id="nav_bar">
+    <div id="nav">
+      <a href="#"
+        ><img
+          src="{{url_for('static',filename='img/images (3).png')}}"
+          alt="Accueil"
+          height="25px"
+          class="scroll"
+      /></a>
+      <a href="#"
+        ><img
+          src="{{url_for('static',filename='img/images (8).png')}}"
+          alt="Accueil"
+          width="27px"
+      /></a>
+    </div>
+    <input
+      type="checkbox"
+      name="mode"
+      id="mode"
+      placeholder="dark"
+      onclick="
+        document.body.id = this.checked ? 'dark' : 'index';
+        document.querySelector('h1').classList.toggle('dk', this.checked);
+        localStorage.mode = this.checked ? 'dark' : 'index';
+      "
+    />
+  </nav>
+</div>
+<div id="section_index">
+  <h1 class="h1">
+    SYSTEME DE GESTION ET DE DIFFUSION DES SUPPORTS DE COURS UNIVERSITAIRES
+  </h1>
+
+  <div id="p">
+    <p>
+      Bonjour et bienvenue sur le site Systeme de Gestion et de Diffusion des
+      Supports de Cours Universitaires.<br />
+      Notre plateforme permet de centraliser les supports de cours universitaires au même endroit.<br />
+      Simple, sécurisée et accessible sur téléphone ou ordinateur, elle facilite la consultation
+      des ressources pédagogiques et leur classement par faculté, département, promotion et semestre.<br />
+    </p>
+  </div>
+  <div id="btn_acc">
+    <a href="{{url_for('inscription')}}"
+      ><button class="btn_acc"><b>s'inscrire</b></button></a
+    >
+    <a href="{{url_for('connexion')}}"
+      ><button class="btn_acc"><b>se connecter</b></button></a
+    >
+  </div>
+</div>
+
+{%endblock%}

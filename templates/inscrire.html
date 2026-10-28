@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inscription</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_acc.css') }}" />
+  </head>
+  <body>
+    <main>
+      <div id="nav_b">
+        <nav id="nav_bar">
+          <div id="nav">
+            <a href="{{ url_for('index') }}" aria-label="Accueil">
+              <img src="{{ url_for('static', filename='img/images (3).png') }}" alt="Accueil" height="25" class="scroll" />
+            </a>
+            <a href="{{ url_for('index') }}" aria-label="Retour">
+              <img src="{{ url_for('static', filename='img/images (8).png') }}" alt="Retour" width="27" />
+            </a>
+          </div>
+          <input type="checkbox" name="mode" id="mode" aria-label="Mode sombre" />
+        </nav>
+      </div>
+      <section>
+        <figure class="bull">
+          <div class="form" id="hello">
+            <h2>Bienvenue</h2>
+            <a href="{{ url_for('index') }}" class="link"><strong>Retour à l'accueil</strong></a>
+          </div>
+          <div class="form">
+            <h1 class="h1">Inscription</h1>
+            <form action="{{ url_for('inscription') }}" method="post" id="form">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+              <div class="champ">
+                <label for="nom">Nom :</label>
+                <input class="input" id="nom" type="text" name="nom" maxlength="100" placeholder="Nom" required />
+              </div>
+              <div class="champ">
+                <label for="email">Email :</label>
+                <input class="input" id="email" type="email" name="email" maxlength="120" placeholder="Email" required />
+              </div>
+              <div class="champ">
+                <label for="password">Mot de passe :</label>
+                <input class="input" type="password" name="mot_de_passe" id="password" minlength="8" placeholder="8 caractères minimum" required />
+                <input type="checkbox" id="chek" aria-label="Afficher le mot de passe" onclick="voir_password()" />
+              </div>
+              <div class="champ">
+                <label for="role">Compte :</label>
+                <select id="role" name="role" required onchange="afficherCodeProfesseur()">
+                  <option value="etudiant">Étudiant</option>
+                  <option value="professeur">Professeur</option>
+                </select>
+              </div>
+              <div class="champ" style="display:none" id="champcode_professeur">
+                <label for="code_professeur">Code professeur :</label>
+                <input class="input" type="password" name="code_professeur" id="code_professeur" placeholder="PROF001" autocomplete="off" />
+              </div>
+              <button type="submit" class="btn_sub"><b>Créer le compte</b></button>
+            </form>
+            <p>
+              Déjà inscrit ? <a href="{{ url_for('connexion') }}" class="link"><b>Se connecter</b></a>
+            </p>
+          </div>
+        </figure>
+      </section>
+    </main>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

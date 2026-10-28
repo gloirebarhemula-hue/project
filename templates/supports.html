@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ cours.nom }} — Supports</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_acc.css') }}" />
+  </head>
+  <body>
+    <section id="section_std">
+      <div id="nav_b">
+        <nav id="nav_bar">
+          <div id="nav">
+            <a href="{{ url_for('student') }}" aria-label="Retour aux cours"><img src="{{ url_for('static', filename='img/images (3).png') }}" alt="Retour" class="scroll" height="25" /></a>
+            <a href="{{ url_for('deconnexion') }}" aria-label="Déconnexion"><img src="{{ url_for('static', filename='img/images (8).png') }}" alt="Déconnexion" width="27" /></a>
+          </div>
+          <input type="checkbox" name="mode" id="mode" aria-label="Mode sombre" />
+        </nav>
+      </div>
+      <figure id="fcours">
+        <a class="welcome" href="{{ url_for('student') }}">Retour à la sélection de cours</a>
+        <h1 class="mb-3">Support : {{ cours.nom }}</h1>
+        <div id="tt">
+          <div>
+            <strong>Faculté :</strong> {{ cours.semestre.promotion.departement.faculte.nom }}<br />
+            <strong>Département :</strong> {{ cours.semestre.promotion.departement.nom }}<br />
+            <strong>Promotion :</strong> {{ cours.semestre.promotion.nom }}<br />
+            <strong>Semestre :</strong> {{ cours.semestre.nom }}
+          </div>
+          <div>
+            <strong class="h3">{{ cours.nom }}</strong>
+            {% if cours.fichier %}<br /><small>{{ cours.fichier }}</small>{% endif %}
+          </div>
+        </div>
+
+        {% if cours.fichier %}
+          {% set ext = cours.fichier.split('.')[-1].lower() %}
+          {% if ext == 'pdf' %}
+            <iframe src="{{ url_for('media', filename=cours.fichier) }}" title="Aperçu du PDF" width="100%" height="500"></iframe>
+          {% elif ext in ['mp4', 'webm', 'ogg'] %}
+            <video width="100%" controls>
+              <source src="{{ url_for('media', filename=cours.fichier) }}" type="video/{{ ext }}" />
+              Votre navigateur ne prend pas en charge la lecture de cette vidéo.
+            </video>
+          {% else %}
+            <p>Ce type de document se consulte après téléchargement.</p>
+          {% endif %}
+          <p><a class="btn_link" href="{{ url_for('download', filename=cours.fichier) }}">Télécharger le support</a></p>
+        {% else %}
+          <p>Aucun fichier n'est associé à ce cours.</p>
+        {% endif %}
+      </figure>
+    </section>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>
